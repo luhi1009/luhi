@@ -1,0 +1,63 @@
+# tests/test_routes.py
+
+import pytest
+from rest_framework import status
+from rest_framework.test import APIClient
+
+@pytest.mark.django_db
+def test_create_product_api():
+    client = APIClient()
+    data = {"name": "New Product", "price": 99.99, "stock": 10}
+    response = client.post('/api/products/', data, format='json')
+    assert response.status_code == status.HTTP_201_CREATED
+    assert response.data["name"] == "New Product"
+
+@pytest.mark.django_db
+def test_update_product_api():
+    product = ProductFactory.create(name="Old Product")
+    client = APIClient()
+    data = {"name": "Updated Product"}
+    response = client.put(f'/api/products/{product.id}/', data, format='json')
+    assert response.status_code == status.HTTP_200_OK
+    assert response.data["name"] == "Updated Product"
+
+@pytest.mark.django_db
+def test_delete_product_api():
+    product = ProductFactory.create(name="Delete Me")
+    client = APIClient()
+    response = client.delete(f'/api/products/{product.id}/')
+    assert response.status_code == status.HTTP_204_NO_CONTENT
+    assert not Product.objects.filter(id=product.id).exists()
+
+@pytest.mark.django_db
+def test_list_all_products_api():
+    ProductFactory.create_batch(5)
+    client = APIClient()
+    response = client.get('/api/products/')
+    assert response.status_code == status.HTTP_200_OK
+    assert len(response.data) == 5
+
+@pytest.mark.django_db
+def test_search_product_by_name_api():
+    product = ProductFactory.create(name="Find Me")
+    client = APIClient()
+    response = client.get('/api/products/', {'name': "Find Me"})
+    assert response.status_code == status.HTTP_200_OK
+    assert len(response.data) == 1
+
+@pytest.mark.django_db
+def test_search_product_by_category_api():
+    category = "Electronics"
+    product = ProductFactory.create(category=category)
+    client = APIClient()
+    response = client.get('/api/products/', {'category': category})
+    assert response.status_code == status.HTTP_200_OK
+    assert len(response.data) == 1
+
+@pytest.mark.django_db
+def test_search_product_by_availability_api():
+    product = ProductFactory.create(stock=0)
+    client = APIClient()
+    response = client.get('/api/products/', {'stock': 0})
+    assert response.status_code == status.HTTP_200_OK
+    assert len(response.data) == 1
