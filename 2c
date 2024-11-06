@@ -1,0 +1,15 @@
+# tests/test_models.py
+
+@pytest.mark.django_db
+def test_delete_product():
+    # Create a product to delete
+    product = ProductFactory.create(name="Product to Delete")
+    
+    # Save the product ID for later comparison
+    product_id = product.id
+    
+    # Delete the product
+    product.delete()
+    
+    # Check that the product no longer exists in the database
+    assert not Product.objects.filter(id=product_id).exists()
