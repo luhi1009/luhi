@@ -1,0 +1,29 @@
+# features/steps/load_steps.py
+
+from behave import given
+from myapp.models import Product
+from datetime import datetime
+
+# This function will be used to load products as background data for your tests
+@given('the following products exist')
+def step_impl(context):
+    # Here, you can load multiple products from the context table or a static set of products
+    # Loop through the table passed in Gherkin feature file to create products
+    
+    for row in context.table:
+        name = row['name']
+        description = row['description']
+        price = row['price']
+        stock = int(row['stock'])
+        category = row['category']
+        
+        # Create product using the provided details
+        Product.objects.create(
+            name=name,
+            description=description,
+            price=price,
+            stock=stock,
+            category=category,
+            created_at=datetime.now(),
+            updated_at=datetime.now()
+        )
