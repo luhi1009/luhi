@@ -1,0 +1,14 @@
+# features/products.feature
+
+Feature: Product Management
+
+  Scenario: Reading a product by ID
+    Given the following products exist:
+      | name       | description        | price | stock | category   |
+      | Product A  | A great product    | 100   | 10    | Electronics|
+    When I view the product with ID 1
+    Then I should see the product "Product A"
+    And the product description should be "A great product"
+    And the price should be "100"
+    And the stock should be "10"
+    And the category should be "Electronics"
