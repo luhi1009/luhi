@@ -1,0 +1,27 @@
+# features/steps/web_steps.py
+
+from behave import when
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+
+# The driver is assumed to be initialized and available in context.browser
+# The following step clicks a button identified by its text or ID
+
+@when('I click the button with text "{button_text}"')
+def step_impl(context, button_text):
+    # Locate the button by its text and click it
+    button = context.browser.find_element(By.XPATH, f'//button[text()="{button_text}"]')
+    button.click()
+
+@when('I click the button with ID "{button_id}"')
+def step_impl(context, button_id):
+    # Locate the button by its ID and click it
+    button = context.browser.find_element(By.ID, button_id)
+    button.click()
+
+@when('I click the button with CSS selector "{css_selector}"')
+def step_impl(context, css_selector):
+    # Locate the button by its CSS selector and click it
+    button = context.browser.find_element(By.CSS_SELECTOR, css_selector)
+    button.click()
