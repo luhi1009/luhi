@@ -1,0 +1,16 @@
+# tests/test_models.py
+
+@pytest.mark.django_db
+def test_update_product():
+    # Create a product to update
+    product = ProductFactory.create(name="Old Product", price=100.00)
+    
+    # Update the product's name and price
+    product.name = "Updated Product"
+    product.price = 150.00
+    product.save()
+    
+    # Fetch the updated product and check if the name and price are updated
+    updated_product = Product.objects.get(id=product.id)
+    assert updated_product.name == "Updated Product"
+    assert updated_product.price == 150.00
