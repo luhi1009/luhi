@@ -1,0 +1,50 @@
+# tests/test_models.py
+
+from myapp.models import Product
+from tests.factories import ProductFactory
+import pytest
+
+@pytest.mark.django_db
+def test_create_product():
+    product = ProductFactory.create(name="Test Product")
+    assert product.name == "Test Product"
+
+@pytest.mark.django_db
+def test_update_product():
+    product = ProductFactory.create(name="Old Product")
+    product.name = "Updated Product"
+    product.save()
+    assert product.name == "Updated Product"
+
+@pytest.mark.django_db
+def test_delete_product():
+    product = ProductFactory.create(name="To Delete")
+    product_id = product.id
+    product.delete()
+    assert not Product.objects.filter(id=product_id).exists()
+
+@pytest.mark.django_db
+def test_list_all_products():
+    ProductFactory.create_batch(5)
+    products = Product.objects.all()
+    assert len(products) == 5
+
+@pytest.mark.django_db
+def test_find_product_by_name():
+    product = ProductFactory.create(name="Searchable Product")
+    found_product = Product.objects.get(name="Searchable Product")
+    assert found_product == product
+
+@pytest.mark.django_db
+def test_find_product_by_category():
+    # Assuming product has category field
+    category = "Electronics"
+    product = ProductFactory.create(category=category)
+    found_product = Product.objects.get(category=category)
+    assert found_product.category == category
+
+@pytest.mark.django_db
+def test_find_product_by_availability():
+    product = ProductFactory.create(stock=0)
+    found_product = Product.objects.get(stock=0)
+    assert found_product.stock == 0
