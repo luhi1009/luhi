@@ -1,0 +1,12 @@
+# tests/test_models.py
+
+@pytest.mark.django_db
+def test_list_all_products():
+    # Create a batch of products
+    ProductFactory.create_batch(5)
+    
+    # Fetch all products from the database
+    products = Product.objects.all()
+    
+    # Assert that we have the correct number of products in the list
+    assert len(products) == 5
