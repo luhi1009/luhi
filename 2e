@@ -1,0 +1,12 @@
+# tests/test_models.py
+
+@pytest.mark.django_db
+def test_find_product_by_name():
+    # Create a product with a specific name
+    product = ProductFactory.create(name="Searchable Product")
+    
+    # Find the product by name
+    found_product = Product.objects.get(name="Searchable Product")
+    
+    # Assert that the found product matches the created product
+    assert found_product == product
