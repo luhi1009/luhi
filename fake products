@@ -1,0 +1,15 @@
+# tests/factories.py
+
+import factory
+from myapp.models import Product  # Adjust this import to your actual Product model
+
+class ProductFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Product
+
+    name = factory.Faker('word')
+    description = factory.Faker('sentence')
+    price = factory.Faker('random_number', digits=2)
+    stock = factory.Faker('random_number', digits=3)
+    created_at = factory.Faker('date_this_year')
+    updated_at = factory.Faker('date_this_year')
